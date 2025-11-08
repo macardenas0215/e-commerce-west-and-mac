@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="240" height="120" viewBox="0 0 240 120" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#8B5E3C"/>
+      <stop offset="100%" stop-color="#D2B48C"/>
+    </linearGradient>
+    <style>
+      .title { font-family: Lato, Arial, sans-serif; font-weight:700; font-size:20px; }
+    </style>
+  </defs>
+
+  <!-- transparent canvas, rounded if used elsewhere -->
+  <rect width="240" height="120" rx="12" fill="none" />
+
+  <!-- Chair icon centered horizontally near the top -->
+  <g transform="translate(99,14)" fill="#8B5E3C">
+    <!-- seat -->
+    <rect x="0" y="14" width="42" height="10" rx="2" />
+    <!-- backrest -->
+    <rect x="6" y="2" width="30" height="14" rx="2" />
+    <!-- left leg -->
+    <rect x="4" y="24" width="6" height="8" rx="1" />
+    <!-- right leg -->
+    <rect x="32" y="24" width="6" height="8" rx="1" />
+  </g>
+
+  <!-- Text centered under the icon -->
+  <text x="120" y="84" text-anchor="middle" class="title" fill="url(#g)">Furniture &amp; Decor Store</text>
+
+</svg>
