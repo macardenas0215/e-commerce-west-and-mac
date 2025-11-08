@@ -9,17 +9,22 @@ import 'firebase_options.dart';
 // 3. Import the native splash package
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 // 1. Import the AuthWrapper
-import 'package:ecommerce_app/screens/auth_wrapper.dart';
+import 'package:ecommerce_app/screens/splash_screen.dart';
 import 'package:ecommerce_app/providers/cart_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart'; // 1. ADD THIS IMPORT
 
-// --- ADD OUR NEW APP COLOR PALETTE ---
-const Color kRichBlack = Color(0xFF1D1F24); // A dark, rich black
-const Color kBrown = Color(0xFF8B5E3C); // Our main "coffee" brown
-const Color kLightBrown = Color(0xFFD2B48C); // A lighter tan/beige
-const Color kOffWhite = Color(0xFFF8F4F0); // A warm, off-white background
-// --- END OF COLOR PALETTE ---
+// --- MODERN FURNITURE SHOWROOM COLOR PALETTE ---
+// Inspired by brands like IKEA, West Elm, and modern Scandinavian design
+const Color kCharcoalBlack = Color(0xFF2C2C2C); // Sophisticated matte black
+const Color kWalnutBrown = Color(0xFF6B4423); // Rich wood brown (primary)
+const Color kWarmBeige = Color(0xFFE8DCC4); // Soft beige (secondary)
+const Color kOffWhite = Color(0xFFFAF8F5); // Warm off-white (background)
+const Color kSoftGray = Color(0xFF9E9E9E); // Neutral gray for text
+const Color kOliveGreen = Color(0xFF6B7C59); // Accent - organic feel
+const Color kTerracotta = Color(0xFFCE8B70); // Accent - warmth
+const Color kLightGray = Color(0xFFF5F5F5); // Card backgrounds
+// --- END OF PALETTE ---
 
 void main() async {
   // 1. Preserve the native splash until initialization completes
@@ -53,71 +58,154 @@ class MyApp extends StatelessWidget {
       title: 'eCommerce App',
       // 1. --- THIS IS THE NEW, COMPLETE THEME ---
       theme: ThemeData(
-        // 2. Set the main color scheme
+        // 2. Set the main color scheme with furniture showroom colors
         colorScheme: ColorScheme.fromSeed(
-          seedColor: kBrown, // Our new primary color
+          seedColor: kWalnutBrown, // Rich wood brown as primary
           brightness: Brightness.light,
-          primary: kBrown,
+          primary: kWalnutBrown,
           onPrimary: Colors.white,
-          secondary: kLightBrown,
-          background: kOffWhite, // Our new app background
+          secondary: kOliveGreen, // Organic olive green
+          onSecondary: Colors.white,
+          tertiary: kTerracotta, // Warm terracotta accent
+          surface: kLightGray,
+          background: kOffWhite, // Warm off-white background
         ),
         useMaterial3: true,
 
         // 3. Set the background color for all screens
         scaffoldBackgroundColor: kOffWhite,
 
-        // 4. --- (FIX) APPLY THE GOOGLE FONT ---
-        // This applies "Lato" to all text in the app
-        textTheme: GoogleFonts.latoTextTheme(Theme.of(context).textTheme),
+        // 4. --- APPLY MODERN FONT: Poppins (clean & elegant) ---
+        // Poppins gives a modern, geometric, friendly feel perfect for furniture
+        textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme).copyWith(
+          headlineLarge: GoogleFonts.poppins(
+            fontSize: 32,
+            fontWeight: FontWeight.w600,
+            color: kCharcoalBlack,
+            letterSpacing: -0.5,
+          ),
+          headlineMedium: GoogleFonts.poppins(
+            fontSize: 24,
+            fontWeight: FontWeight.w600,
+            color: kCharcoalBlack,
+          ),
+          titleLarge: GoogleFonts.poppins(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: kCharcoalBlack,
+          ),
+          titleMedium: GoogleFonts.poppins(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: kCharcoalBlack,
+          ),
+          bodyLarge: GoogleFonts.poppins(
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+            color: kSoftGray,
+          ),
+          bodyMedium: GoogleFonts.poppins(
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+            color: kSoftGray,
+          ),
+        ),
 
-        // 5. --- (FIX) GLOBAL BUTTON STYLE ---
+        // 5. --- GLOBAL BUTTON STYLE: Rounded, elegant, high-contrast ---
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: kBrown, // Use our new brown
-            foregroundColor: Colors.white, // Text color
-            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+            backgroundColor: kWalnutBrown,
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12), // Rounded corners
+              borderRadius: BorderRadius.circular(16), // More rounded for modern look
+            ),
+            elevation: 2, // Subtle shadow
+            textStyle: GoogleFonts.poppins(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.5,
             ),
           ),
         ),
 
-        // 6. --- (FIX) GLOBAL TEXT FIELD STYLE ---
-        inputDecorationTheme: InputDecorationTheme(
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(color: Colors.grey[400]!),
-          ),
-          labelStyle: TextStyle(color: kBrown.withOpacity(0.8)),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: kBrown, width: 2.0),
+        // 6. --- GLOBAL TEXT BUTTON STYLE ---
+        textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(
+            foregroundColor: kWalnutBrown,
+            textStyle: GoogleFonts.poppins(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
 
-        // 7. --- (FIX) GLOBAL CARD STYLE ---
-        cardTheme: CardThemeData(
-          elevation: 1, // A softer shadow
-          color: Colors.white, // Pure white cards on the off-white bg
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+        // 7. --- GLOBAL TEXT FIELD STYLE: Clean borders, rounded ---
+        inputDecorationTheme: InputDecorationTheme(
+          filled: true,
+          fillColor: Colors.white,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide(color: kWarmBeige),
           ),
-          // 8. This ensures the images inside the card are rounded
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide(color: kWarmBeige),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide(color: kWalnutBrown, width: 2.0),
+          ),
+          labelStyle: GoogleFonts.poppins(
+            color: kSoftGray,
+            fontWeight: FontWeight.w500,
+          ),
+          hintStyle: GoogleFonts.poppins(
+            color: kSoftGray.withOpacity(0.6),
+          ),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        ),
+
+        // 8. --- GLOBAL CARD STYLE: Soft shadows, rounded corners ---
+        cardTheme: CardThemeData(
+          elevation: 3, // Soft, elegant shadow
+          color: Colors.white,
+          surfaceTintColor: Colors.white,
+          shadowColor: Colors.black.withOpacity(0.08),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20), // Generous rounding
+          ),
           clipBehavior: Clip.antiAlias,
         ),
 
-        // 9. --- (NEW) GLOBAL APPBAR STYLE ---
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.white, // Clean white AppBar
-          foregroundColor: kRichBlack, // Black icons and text
-          elevation: 0, // No shadow, modern look
+        // 9. --- GLOBAL APPBAR STYLE: Clean, minimal, elegant ---
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.white,
+          foregroundColor: kCharcoalBlack,
+          elevation: 0,
           centerTitle: true,
+          titleTextStyle: GoogleFonts.poppins(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: kCharcoalBlack,
+            letterSpacing: 0.5,
+          ),
+          iconTheme: IconThemeData(color: kCharcoalBlack),
+        ),
+
+        // 10. --- FLOATING ACTION BUTTON STYLE ---
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+          backgroundColor: kWalnutBrown,
+          foregroundColor: Colors.white,
+          elevation: 4,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
         ),
       ),
       // --- END OF NEW THEME ---
-      // 3. Use AuthWrapper to decide initial screen based on auth state
-      home: const AuthWrapper(),
+      // 3. Show an in-app splash first, then navigate to the AuthWrapper
+      home: const SplashScreen(),
     );
   }
 }
