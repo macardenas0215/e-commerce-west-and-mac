@@ -39,7 +39,7 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
       final snap = await _firestore.collection('orders').doc(orderId).get();
       if (snap.exists) {
         setState(() {
-          _orderData = snap.data() as Map<String, dynamic>?;
+          _orderData = snap.data();
         });
       }
     } catch (e) {
