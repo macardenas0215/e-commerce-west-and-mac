@@ -7,7 +7,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
 // 3. Import the native splash package
-import 'package:flutter_native_splash/flutter_native_splash.dart';
+// NOTE: We intentionally avoid manually preserving/removing the native splash
+// via flutter_native_splash. Let the plugin auto-hide the native splash on the
+// first Flutter frame to prevent rare cases where the app stays stuck on the
+// splash until the app is backgrounded/foregrounded.
 // 1. Import the AuthWrapper
 import 'package:ecommerce_app/screens/splash_screen.dart';
 import 'package:ecommerce_app/providers/cart_provider.dart';
@@ -27,9 +30,8 @@ const Color kLightGray = Color(0xFFF5F5F5); // Card backgrounds
 // --- END OF PALETTE ---
 
 void main() async {
-  // 1. Preserve the native splash until initialization completes
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  // Ensure bindings are initialized before any async work
+  WidgetsFlutterBinding.ensureInitialized();
 
   // 2. Initialize Firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -41,9 +43,6 @@ void main() async {
       child: const MyApp(),
     ),
   );
-
-  // 4. Remove the native splash screen once app is ready
-  FlutterNativeSplash.remove();
 }
 
 class MyApp extends StatelessWidget {
@@ -83,32 +82,32 @@ class MyApp extends StatelessWidget {
             fontWeight: FontWeight.w600,
             color: kCharcoalBlack,
             letterSpacing: -0.5,
-          ),
+          ).copyWith(fontFamilyFallback: ['Roboto', 'Noto Sans']),
           headlineMedium: GoogleFonts.poppins(
             fontSize: 24,
             fontWeight: FontWeight.w600,
             color: kCharcoalBlack,
-          ),
+          ).copyWith(fontFamilyFallback: ['Roboto', 'Noto Sans']),
           titleLarge: GoogleFonts.poppins(
             fontSize: 20,
             fontWeight: FontWeight.w600,
             color: kCharcoalBlack,
-          ),
+          ).copyWith(fontFamilyFallback: ['Roboto', 'Noto Sans']),
           titleMedium: GoogleFonts.poppins(
             fontSize: 16,
             fontWeight: FontWeight.w500,
             color: kCharcoalBlack,
-          ),
+          ).copyWith(fontFamilyFallback: ['Roboto', 'Noto Sans']),
           bodyLarge: GoogleFonts.poppins(
             fontSize: 16,
             fontWeight: FontWeight.w400,
             color: kSoftGray,
-          ),
+          ).copyWith(fontFamilyFallback: ['Roboto', 'Noto Sans']),
           bodyMedium: GoogleFonts.poppins(
             fontSize: 14,
             fontWeight: FontWeight.w400,
             color: kSoftGray,
-          ),
+          ).copyWith(fontFamilyFallback: ['Roboto', 'Noto Sans']),
         ),
 
         // 5. --- GLOBAL BUTTON STYLE: Rounded, elegant, high-contrast ---
@@ -125,7 +124,7 @@ class MyApp extends StatelessWidget {
               fontSize: 16,
               fontWeight: FontWeight.w600,
               letterSpacing: 0.5,
-            ),
+            ).copyWith(fontFamilyFallback: ['Roboto', 'Noto Sans']),
           ),
         ),
 
@@ -136,7 +135,7 @@ class MyApp extends StatelessWidget {
             textStyle: GoogleFonts.poppins(
               fontSize: 14,
               fontWeight: FontWeight.w600,
-            ),
+            ).copyWith(fontFamilyFallback: ['Roboto', 'Noto Sans']),
           ),
         ),
 
@@ -159,10 +158,10 @@ class MyApp extends StatelessWidget {
           labelStyle: GoogleFonts.poppins(
             color: kSoftGray,
             fontWeight: FontWeight.w500,
-          ),
+          ).copyWith(fontFamilyFallback: ['Roboto', 'Noto Sans']),
           hintStyle: GoogleFonts.poppins(
             color: kSoftGray.withOpacity(0.6),
-          ),
+          ).copyWith(fontFamilyFallback: ['Roboto', 'Noto Sans']),
           contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         ),
 
@@ -189,7 +188,7 @@ class MyApp extends StatelessWidget {
             fontWeight: FontWeight.w600,
             color: kCharcoalBlack,
             letterSpacing: 0.5,
-          ),
+          ).copyWith(fontFamilyFallback: ['Roboto', 'Noto Sans']),
           iconTheme: IconThemeData(color: kCharcoalBlack),
         ),
 

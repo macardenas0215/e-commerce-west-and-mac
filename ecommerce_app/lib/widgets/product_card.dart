@@ -181,9 +181,9 @@ class ProductCard extends StatelessWidget {
                                   color: Color(0xFF6B4423), // Walnut brown
                                   fontWeight: FontWeight.w700,
                                   letterSpacing: 0.3,
-                                  decoration: !isAvailable
-                                      ? TextDecoration.lineThrough
-                                      : null,
+                                  decoration: !isAvailable ? TextDecoration.lineThrough : null,
+                                  // Ensure fallbacks for glyphs not present in Poppins
+                                  fontFamilyFallback: ['Roboto', 'Noto Sans'],
                                 ),
                               ),
                             ),
