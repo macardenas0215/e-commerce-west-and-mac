@@ -30,8 +30,11 @@ migrate_working_dir/
 .flutter-plugins-dependencies
 .pub-cache/
 .pub/
-/build/
-/coverage/
+# NOTE: build artifacts were previously ignored. The build folder is now
+# intentionally tracked for the release APK the team requested. If you
+# prefer to keep build/ out of git, revert this change and use `git add -f`.
+#/build/
+.coverage/
 
 # Symbolication related
 app.*.symbols

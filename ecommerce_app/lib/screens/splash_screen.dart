@@ -19,26 +19,44 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   Timer? _timer;
+  Timer? _failsafeTimer; // Second timer in case first navigation silently fails
 
   @override
   void initState() {
     super.initState();
     // Start a short timer then navigate to the AuthWrapper
     _timer = Timer(Duration(milliseconds: widget.durationMs), () {
-      // Use post frame callback to ensure context is valid for navigation
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!mounted) return;
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const AuthWrapper()),
-        );
-      });
+      _navigateToAuthWrapper(reason: 'primary_timer');
+    });
+
+    // Failsafe: if for any reason navigation didn't happen (rare release issues),
+    // force it after 3 seconds.
+    _failsafeTimer = Timer(const Duration(seconds: 3), () {
+      if (mounted) {
+        _navigateToAuthWrapper(reason: 'failsafe_timer');
+      }
     });
   }
 
   @override
   void dispose() {
     _timer?.cancel();
+    _failsafeTimer?.cancel();
     super.dispose();
+  }
+
+  void _navigateToAuthWrapper({required String reason}) {
+    if (!mounted) return;
+    // Prevent duplicate navigation attempts.
+    if (ModalRoute.of(context)?.isCurrent != true) return;
+    debugPrint('[SplashScreen] Navigating to AuthWrapper (reason=$reason)');
+    // Use post frame callback to ensure safe navigation.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const AuthWrapper()),
+      );
+    });
   }
 
   @override
