@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ecommerce_app/screens/auth_wrapper.dart';
 
@@ -20,20 +22,21 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   Timer? _timer;
   Timer? _failsafeTimer; // Second timer in case first navigation silently fails
+  bool _showAuth = false; // When true, render AuthWrapper in-place
 
   @override
   void initState() {
     super.initState();
     // Start a short timer then navigate to the AuthWrapper
     _timer = Timer(Duration(milliseconds: widget.durationMs), () {
-      _navigateToAuthWrapper(reason: 'primary_timer');
+      _showAuthWrapper(reason: 'primary_timer');
     });
 
     // Failsafe: if for any reason navigation didn't happen (rare release issues),
     // force it after 3 seconds.
     _failsafeTimer = Timer(const Duration(seconds: 3), () {
       if (mounted) {
-        _navigateToAuthWrapper(reason: 'failsafe_timer');
+        _showAuthWrapper(reason: 'failsafe_timer');
       }
     });
   }
@@ -45,22 +48,27 @@ class _SplashScreenState extends State<SplashScreen> {
     super.dispose();
   }
 
-  void _navigateToAuthWrapper({required String reason}) {
+
+
+  void _showAuthWrapper({required String reason}) {
     if (!mounted) return;
-    // Prevent duplicate navigation attempts.
-    if (ModalRoute.of(context)?.isCurrent != true) return;
-    debugPrint('[SplashScreen] Navigating to AuthWrapper (reason=$reason)');
-    // Use post frame callback to ensure safe navigation.
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const AuthWrapper()),
-      );
+    if (_showAuth) return; // already showing
+    debugPrint('[SplashScreen] Showing AuthWrapper in-place (reason=$reason)');
+    // Update state to render the AuthWrapper directly as the home widget.
+    setState(() {
+      _showAuth = true;
     });
+
+    // Ensure web repaints immediately
+    SchedulerBinding.instance.scheduleFrame();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_showAuth) {
+      // Render AuthWrapper directly to avoid route push timing issues on web.
+      return const AuthWrapper();
+    }
     // Use theme background for consistency with the app's look
     final bg = Theme.of(context).scaffoldBackgroundColor;
 
